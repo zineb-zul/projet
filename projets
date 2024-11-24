@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# Fonction pour obtenir le nombre de fichiers dans le répertoire actuel
+function get_file_count {
+    echo $(ls -1 | wc -l)
+}
+
+# Message de bienvenue
+echo "Bienvenue dans le jeu Guessing Game !"
+correct_count=$(get_file_count)  # Nombre correct de fichiers
+user_guess=-1
+
+# Boucle jusqu'à ce que l'utilisateur devine correctement
+while [[ $user_guess -ne $correct_count ]]; do
+    echo -n "Combien de fichiers se trouvent dans le répertoire actuel ? "
+    read user_guess
+
+    # Vérification de la réponse de l'utilisateur
+    if [[ $user_guess -lt $correct_count ]]; then
+        echo "Trop bas ! Essayez encore."
+    elif [[ $user_guess -gt $correct_count ]]; then
+        echo "Trop haut ! Essayez encore."
+    fi
+done
+
+# Message de succès
+echo "Félicitations ! Vous avez deviné correctement : il y a $correct_count fichiers."
+# Génération automatique de README.md
+
+all: README.md
+
+README.md: guessinggame.sh
+	echo "# Projet Guessing Game" > README.md
+	echo "\n**Date et heure de génération:** $$(date)" >> README.md
+	echo "\n**Nombre de lignes dans guessinggame.sh:** $$(wc -l < guessinggame.sh)" >> README.md
+git init
+git add guessinggame.sh makefile
+git commit -m "Ajout initial des fichiers guessinggame.sh et makefile"
+git remote add origin https://github.com/<zaineb-zul>/projet.git
+git push -u origin main
+make
